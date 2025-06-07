@@ -88,9 +88,9 @@ The repository is organized into three main directories:
 ### Manual Execution
 **Primary Model:**
 
-`cd ranked_prob_evo/
-python main.py        # Execute proposed model
-python evaluator.py`   # Generate performance evaluation
+`cd ranked_prob_evo/`
+`python main.py`        # Execute proposed model
+`python evaluator.py`   # Generate performance evaluation
 
 
 
