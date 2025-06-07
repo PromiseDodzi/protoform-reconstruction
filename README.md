@@ -2,20 +2,24 @@
 
 This repository accompanies the paper **"Unsupervised Protoform Reconstruction through Parsimonious Rule-guided Heuristics and Evolutionary Search"** by Promise Dodzi Kpoglu. The repository contains the complete experimental framework, including datasets, source code, and evaluation scripts used to validate the proposed methodology.
 
+---
+
 ## Repository Structure
 
 The repository is organized into three main directories:
 
-- **`ranked_prob_evo/`**: Implementation and results for the proposed model  
-- **`base_model/`**: Implementation and results for the baseline comparison model  
-- **`adhoc_files/`**: Auxiliary scripts and visualization tools for analysis  
+- **`ranked_prob_evo/`**: Implementation and results for the proposed model
+- **`base_model/`**: Implementation and results for the baseline comparison model
+- **`adhoc_files/`**: Auxiliary scripts and visualization tools for analysis
+
+---
 
 ## File Descriptions
 
 ### Primary Model (`ranked_prob_evo/`)
 
 | File | Description |
-|------|-------------|
+|---|---|
 | `preprocessing.py` | Data preprocessing pipeline for input normalization |
 | `parsimony.py` | Implementation of the parsimony-based reconstruction component |
 | `rule_transform_and_evolution.py` | Rule transformation and evolutionary search algorithms |
@@ -31,7 +35,7 @@ The repository is organized into three main directories:
 ### Baseline Model (`base_model/`)
 
 | File | Description |
-|------|-------------|
+|---|---|
 | `base.py` | Reimplementation of **Bouchard et al. (2007)** baseline model |
 | `base_evaluation.py` | Baseline model performance evaluation |
 | `romance-ipa.txt` | Original Romance language dataset |
@@ -49,7 +53,7 @@ The repository is organized into three main directories:
 ### Analysis Tools (`adhoc_files/`)
 
 | File | Description |
-|------|-------------|
+|---|---|
 | `get_illustration.py` | Performance visualization generator |
 | `flowchart.tex` | LaTeX source for model architecture diagram |
 | `flowchart.pdf` | Model architecture and component visualization |
@@ -59,29 +63,44 @@ The repository is organized into three main directories:
 | `rule_transformed_forms.csv` | Rule transformation outputs and rankings |
 | `Makefile` | Build automation for documentation generation |
 
+---
+
 ## Experimental Reproduction
 
 ### Prerequisites
 
-1. **Clone the repository:**
-   ```
-   git clone [[repository-url](https://github.com/PromiseDodzi/protoform-reconstruction)]
-   cd protoform-reconstruction
+1.  **Clone the repository:**
+    ```bash
+    git clone [repository-url]
+    cd protoform-reconstruction
+    ```
 
-2. **Install dependencies:**
-   ```
-   pip install -r requirements.txt
+2.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-3. **Ensure you are on the master branch::**
-   ```
-   git checkout master
+3.  **Ensure you are on the master branch:**
+    ```bash
+    git checkout master
+    ```
 
-## Execution Options
+### Execution Options
 
-### Automated Execution
-
+#### Automated Execution
 **Run all experiments automatically:**
-
-```
+```bash
 make all
+
+#### Manual Execution
+
+**Primary Model:**
+
+```bash
+cd ranked_prob_evo/
+python main.py        # Execute proposed model
+python evaluator.py   # Generate performance evaluation
+
+
+
 
