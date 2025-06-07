@@ -83,13 +83,16 @@ The repository is organized into three main directories:
 
 #### Automated Execution
 **Run all experiments automatically:**
+
 `make all`
 
 ### Manual Execution
 **Primary Model:**
 
 `cd ranked_prob_evo/`
+
 `python main.py`        # Execute proposed model
+
 `python evaluator.py`   # Generate performance evaluation
 
 
