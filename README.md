@@ -70,13 +70,16 @@ The repository is organized into three main directories:
 ### Prerequisites
 
 1.  **Clone the repository:**
+   
     `git clone [repository-url]
     cd protoform-reconstruction`
 
-2.  **Install dependencies:**
+3.  **Install dependencies:**
+   
     ` pip install -r requirements.txt` 
 
-3.  **Ensure you are on the master branch:**
+5.  **Ensure you are on the master branch:**
+   
     `git checkout master` 
 
 ### Execution Options
