@@ -70,36 +70,20 @@ The repository is organized into three main directories:
 ### Prerequisites
 
 1.  **Clone the repository:**
-    ```bash
-    git clone [repository-url]
-    cd protoform-reconstruction
-    ```
+    `git clone [repository-url]
+    cd protoform-reconstruction`
 
 2.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
+    ` pip install -r requirements.txt` 
 
 3.  **Ensure you are on the master branch:**
-    ```bash
-    git checkout master
-    ```
+    `git checkout master 
 
 ### Execution Options
 
 #### Automated Execution
 **Run all experiments automatically:**
-```bash
-make all
-
-#### Manual Execution
-
-**Primary Model:**
-
-```bash
-cd ranked_prob_evo/
-python main.py        # Execute proposed model
-python evaluator.py   # Generate performance evaluation
+`make all`
 
 
 
