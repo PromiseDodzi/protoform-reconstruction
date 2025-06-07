@@ -64,7 +64,15 @@ The repository is organized into three main directories:
 ### Prerequisites
 
 1. **Clone the repository:**
-   ```bash
-   git clone [repository-url]
+   ```
+   git clone [[repository-url](https://github.com/PromiseDodzi/protoform-reconstruction)]
    cd protoform-reconstruction
+
+2. **Install dependencies:**
+   ```
+   pip install -r requirements.txt
+
+3. **Ensure you are on the master branch::**
+   ```
+   git checkout master
 
