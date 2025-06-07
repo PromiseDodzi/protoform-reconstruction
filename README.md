@@ -71,8 +71,9 @@ The repository is organized into three main directories:
 
 1.  **Clone the repository:**
    
-    `git clone [[repository-url](https://github.com/PromiseDodzi/protoform-reconstruction)]
-    cd protoform-reconstruction`
+    `git clone [repository-url]`
+    
+    `cd protoform-reconstruction`
 
 3.  **Install dependencies:**
    
