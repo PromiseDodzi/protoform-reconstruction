@@ -86,7 +86,7 @@ def parsimony_proto(input_tsv, output_tsv, top_k=5):
     new_proto_fieldnames = [f'parsimony_proto{i+1}' for i in range(top_k)]
     output_fields = fieldnames + new_proto_fieldnames
 
-    for row in tqdm(rows, desc="Processing reflexes"):
+    for row in tqdm(rows, desc="Processing candidate protoforms"):
         processed_row = row.copy()
 
         for key in processed_row:
@@ -248,7 +248,7 @@ def evaluate_best_proto(input_tsv, output_tsv, top_ranked):
 
     proto_columns = [f'Selected_Proto{i+1}' for i in range(top_ranked)]
 
-    for row in tqdm(rows, desc="Processing reflexes"):
+    for row in tqdm(rows, desc="Processing candidate protoforms"):
    
         processed_row = {k: remove_diacritics(v) if isinstance(v, str) else v for k, v in row.items()}
 
