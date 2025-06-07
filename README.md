@@ -86,7 +86,7 @@ The repository is organized into three main directories:
 
 `make all`
 
-### Manual Execution
+#### Manual Execution
 **Primary Model:**
 
 `cd ranked_prob_evo/`
@@ -94,6 +94,41 @@ The repository is organized into three main directories:
 `python main.py`        # Execute proposed model
 
 `python evaluator.py`   # Generate performance evaluation
+
+**Baseline Model:**
+
+`cd base_model/`
+
+`python base.py`        # Execute baseline model
+
+`python base_evaluation.py` # Generate baseline evaluation
+
+**Analysis and Visualization:**
+
+`cd adhoc_files/`
+
+`python get_illustration.py`  # Generate performance plots
+
+`make flowchart`            # Generate architecture diagram
+
+**Additional Outputs:**
+
+To generate the rule transformation analysis (rule_transformed_forms.csv):
+
+use the `get_transformed` method in the `DenoisingModel` class located in `ranked_prob_evo/rule_transform_and_evolution.py`.
+
+#### Model Configuration
+
+The model components can be individually configured by modifying the `analyze_row` method parameters in the `DenoisingModel` class within `rule_transform_and_evolution.py`.
+
+
+---
+## Acknowledgments
+We acknowledge the contributions of all BANG project members and extend special thanks to Andrei Munteanu for his technical support.
+
+This research is supported by the ERC-funded project BANG: "The Mysterious Bang: A Language and Population Isolate Unlocks the Secrets of Interior West Africa's Lost Ethnolinguistic Diversity" (CORDIS/Project ID: 101045195).
+
+
 
 
 
