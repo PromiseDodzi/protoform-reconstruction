@@ -1,4 +1,5 @@
-#python base.py.py -n "my_run" -m Dirichlet
+#This implementation is adaptation from He et al., (2022) reimplementation of Bouchard Cote et al. (2007)
+#Their reimplementation can be found at: https://github.com/AndreHe02/historical_release/blob/master/sampler.py
 import numpy as np
 import torch
 import re
@@ -9,12 +10,11 @@ import os
 from tqdm import tqdm
 from collections import defaultdict
 
-# Constants
+BASE_FOLDER='base_model'
 BIG_NEG = -1e10
-VOWELS = {'a', 'e', 'i', 'o', 'u', 'ɛ', 'ɔ', 'æ', 'ɪ', 'ʊ', 'ʌ', 'ə', 'ɨ', 'ɐ', 'ɑ', 'ɒ'} # Add all vowels from your IPA set
+VOWELS = {'a', 'e', 'i', 'o', 'u', 'ɛ', 'ɔ', 'æ', 'ɪ', 'ʊ', 'ʌ', 'ə', 'ɨ', 'ɐ', 'ɑ', 'ɒ'} 
 CONSONANTS = set()
 
-# Data preprocessing functions
 def remove_stress(word):
     word = word.replace('ˈ', '')
     word = word.replace('ˌ', '')
@@ -27,7 +27,7 @@ def remove_length_indicators(word):
     return word 
 
 def remove_parentheses_labels(word):
-    return re.sub(r"[\(\[](.*?)[\)\]]", "", word)  # Added raw string prefix
+    return re.sub(r"[\(\[](.*?)[\)\]]", "", word)  
 
 def remove_superscripts(word):
     word = word.replace('ʲ', '')
@@ -46,18 +46,18 @@ def preprocess_ipa(words):
     return processed
 
 def read_words(filename):
-    with open(f'base_model/{filename}', 'r', encoding='utf-8') as f:
+    with open(f'{BASE_FOLDER}/{filename}', 'r', encoding='utf-8') as f:
         words = f.readlines()
         words = [w.strip() for w in words]
     return words
 
-def create_files(link='base_model/romance-ipa.txt'):
+def create_files(link=f'{BASE_FOLDER}/romance-ipa.txt'):
     with open(link, 'r', encoding='utf-8') as f:
         content = f.read()
 
     lines = content.split('\n')
     header = lines[0].split('\t')
-    languages = header  # Include all columns as languages
+    languages = header  
     language_data = {lang: [] for lang in languages}
 
     for line in lines[1:]:
@@ -66,28 +66,23 @@ def create_files(link='base_model/romance-ipa.txt'):
         
         parts = line.split('\t')
         
-        # Process each language's data correctly
         for i, lang in enumerate(languages):
             if i < len(parts):
                 ipa = parts[i]
-                # Only exclude '+' values, but include '-' values as empty strings
                 if ipa.strip() == '-':
                     language_data[lang].append('')
                 elif ipa.strip() != '+':
                     language_data[lang].append(ipa)
-                # Skip '+' entries completely
             else:
-                # If data is missing for this language, add empty string
                 language_data[lang].append('')
 
-    # Write each language's data to a separate file
     for lang, data in language_data.items():
-        filename = f"base_model/{lang.capitalize().replace('-', '_')}_ipa.txt"
+        filename = f"{BASE_FOLDER}/{lang.capitalize().replace('-', '_')}_ipa.txt"
         with open(filename, 'w', encoding='utf-8') as f:
             f.write('\n'.join(data))
     
     print(f"Files created successfully! Languages processed: {', '.join(languages)}")
-    # Optional: print counts for verification
+
     for lang, data in language_data.items():
         print(f"{lang}: {len(data)} entries")
 
@@ -125,7 +120,6 @@ class Vocabulary:
         self.eow = self.vocab2id[')']
         self.size = len(vocab)
         
-        # Add fallback for unknown characters
         self.unk = self.pad
         self.vocab2id = defaultdict(lambda: self.unk, self.vocab2id)
 
@@ -139,7 +133,6 @@ class Vocabulary:
         return s
 
     def make_batch(self, words, align_right=False):
-        # Ensure words is a list of strings
         words = [str(w) if not isinstance(w, str) else w for w in words]
         
         lens = [len(w) for w in words]
@@ -215,18 +208,16 @@ class DirichletModel(BaseModel):
         self.aligner = self 
 
     def normalize(self):
-        # Add small epsilon to avoid log(0)
+
         self.sub_prs = self.sub_prs + 1e-10
         self.ins_prs = self.ins_prs + 1e-10
         
-        # Normalize and take log
         self.sub_prs = self.sub_prs / (self.sub_prs.sum(axis=-1, keepdims=True) + 1e-10)
         self.sub_prs = np.log(self.sub_prs)
         
         self.ins_prs = self.ins_prs / (self.ins_prs.sum(axis=-1, keepdims=True) + 1e-10)
         self.ins_prs = np.log(self.ins_prs)
         
-        # Replace any remaining invalid values with large negative numbers
         self.sub_prs[np.isnan(self.sub_prs)] = BIG_NEG
         self.ins_prs[np.isnan(self.ins_prs)] = BIG_NEG
 
@@ -334,9 +325,7 @@ MODELS = {
     'Bigram': BigramModel
 }
 
-# Alignment and reconstruction functions
 def compute_posteriors(aligner, sources, targets):
-    # Ensure proper dimensionality
     if isinstance(sources, list):
         sources = vocab.make_tensor(sources, add_boundaries=True).numpy()
     if isinstance(targets, list):
@@ -351,15 +340,12 @@ def compute_posteriors(aligner, sources, targets):
     return aligner.cache
 
 def compute_mutation_prob(model, sources, targets):
-    # Handle empty inputs
     if not sources or not targets:
         return np.array([BIG_NEG]*max(1, len(sources)))
         
-    # Convert to lists if needed
     sources = list(sources)
     targets = list(targets)
     
-    # Ensure targets matches sources length
     if len(targets) == 1 and len(sources) > 1:
         targets = targets * len(sources)
         
@@ -407,10 +393,8 @@ def one_edit_proposals(word, leaves):
     proposals = set()
     proposals.add(word)  # Always include current word
     
-    # Phoneme-aware edits
     for i in range(len(word)):
         current = word[i]
-        # Vowel/consonant aware substitutions
         if current in VOWELS:
             replacements = VOWELS
         else:
@@ -423,8 +407,8 @@ def one_edit_proposals(word, leaves):
     
     common_changes = {
     # Palatalization
-    'k': 'ʧ',      # Latin "c" before front vowels (e.g., "centum" → "ciento")
-    'g': 'ʤ',      # Latin "g" before front vowels (e.g., "gelu" → "gel")
+    'k': 'ʧ',      
+    'g': 'ʤ',     
     # Voicing of stops
     'p': 'b',
     't': 'd',
@@ -434,38 +418,37 @@ def one_edit_proposals(word, leaves):
     'd': 'ð',
     'g': 'ɣ',
     # Nasal assimilation and simplification
-    'mn': 'n',     # "somnus" → "sommeil"
-    'gn': 'ɲ',     # "signum" → "señal"
+    'mn': 'n',    
+    'gn': 'ɲ',     
     'nn': 'n',
     # Cluster reduction
-    'kt': 'tt',    # "nocte" → "notte"
-    'ct': 'it',    # "factum" → "fait"
+    'kt': 'tt',    
+    'ct': 'it',    
     'pt': 't',
     'bt': 't',
     # Glide insertion and vowel diphthongization
-    'e': 'je',     # "bene" → "bien"
-    'o': 'we',     # "bonus" → "bueno"
-    'ae': 'e',     # "caelum" → "cielo"
-    'au': 'o',     # "aurum" → "oro"
+    'e': 'je',     
+    'o': 'we',     
+    'ae': 'e',     
+    'au': 'o',     
     # Simplifications
-    'ti': 'ts',    # "natio" → "nación"
-    'di': 'ʤ',     # "diurnus" → "giorno"
+    'ti': 'ts',    
+    'di': 'ʤ',     
     # Final vowel loss
-    'us': '',      # "lupus" → "loup"
-    'um': '',      # "bellum" → "bel"
+    'us': '',      
+    'um': '',     
     # Vowel raising or lowering
     'ɛ': 'e',
     'ɔ': 'o',
     # Metathesis
-    'per': 'pre',  # "periculum" → "peril"
+    'per': 'pre',  
     # Other known changes
-    'll': 'ʎ',     # Italian "figlio", Spanish "hijo" from "filius"
-    'fl': 'ʎ',     # Latin "flamma" → "llama"
+    'll': 'ʎ',     
+    'fl': 'ʎ',     
     # Sibilant development
-    's': 'z',      # In intervocalic position
+    's': 'z',     
 }
 
-    
     for pattern, replacement in common_changes.items():
         if pattern in word:
             new_word = word.replace(pattern, replacement)
@@ -506,27 +489,23 @@ class LanguageNode:
         sample_likelihood = None
         num_rounds = 1 if bool(self.config['proposal_heuristic']) else 5
         
-        # Handle empty initial form
         if not cur:
             leaves = [w for w in [child.words[i] for child in self.children] if w]
-            cur = min(leaves, key=len) if leaves else ""  # Fallback to empty string if no leaves
-            if not cur:  # Still empty after fallback
+            cur = min(leaves, key=len) if leaves else ""  
+            if not cur:  
                 return "", BIG_NEG
 
         for _ in range(num_rounds):
             leaves = [child.words[i] for child in self.children]
             
-            # Generate proposals
             if bool(self.config['proposal_heuristic']):
                 proposals = heuristic_proposals(cur, leaves)
             else:
                 proposals = one_edit_proposals(cur, leaves)
             
-            # Handle empty proposals case
             if not proposals:
                 proposals= [cur]
-            
-            # Limit number of proposals if too many
+
             if len(proposals) > 500:
                 proposals = np.random.choice(proposals, size=500, replace=False)
             
@@ -553,11 +532,9 @@ class LanguageNode:
                 temp = self.config.get('temperature', 1.0)
                 scaled_prs = (proposal_prs - proposal_prs.max()) / temp
                 
-                # Handle numerical stability
-                prs = np.exp(scaled_prs - np.max(scaled_prs))  # Subtract max for numerical stability
-                prs = prs / (prs.sum() + 1e-10)  # Add small epsilon to avoid division by zero
+                prs = np.exp(scaled_prs - np.max(scaled_prs))  
+                prs = prs / (prs.sum() + 1e-10)  
                 
-                # Replace any remaining NaN or invalid values with uniform probabilities
                 if np.any(np.isnan(prs)) or np.any(prs < 0):
                     prs = np.ones_like(prs) / len(prs)
                     
@@ -571,7 +548,6 @@ class LanguageNode:
                     break 
                 cur = proposals[argmax]
             else:
-                # Add temperature scaling if config exists
                 temp = self.config.get('temperature', 1.0)
                 scaled_prs = (proposal_prs - proposal_prs.max()) / temp
                 prs = np.exp(scaled_prs) / np.exp(scaled_prs).sum()
@@ -666,7 +642,7 @@ def run_EM(root, EM_ROUNDS, LOG_OUTPUT=False, LOG_DIR=None, latin_words=None):
     for itr in range(EM_ROUNDS):
         likelihood = sample_tree(root, mh=True)
         print("Likelihood:", likelihood)
-        dist = evaluate(root.words, latin_words)  # Use the passed parameter
+        dist = evaluate(root.words, latin_words)  
         print("Edit distance:", dist)
         hist.append(dist)
         
@@ -719,12 +695,10 @@ def main():
     LOG_OUTPUT = bool(args.log_output)
     MODEL_NAME = args.model
 
-    # Create data files from input
     create_files(args.input_file)
 
     config['temperature'] = 0.1
 
-    # Load and preprocess data
     fr = preprocess_ipa(read_words('French_ipa.txt'))
     pt = preprocess_ipa(read_words('Portuguese_ipa.txt'))
     ro = preprocess_ipa(read_words('Romanian_ipa.txt'))
@@ -735,23 +709,19 @@ def main():
     all_la = la.copy()
 
    
-    # Initialize vocabulary with all words
     global vocab
     vocab = Vocabulary(fr+pt+ro+es+it+la)
     
     global VOWELS, CONSONANTS
-    # Update the CONSONANTS set based on the actual vocabulary
     CONSONANTS = set(vocab.vocab) - VOWELS - {'-', '|', '(', ')'}
 
     VOW_CON_CLASSES = np.zeros(vocab.size, dtype=np.int32)
     for i, char in enumerate(vocab.vocab):
         VOW_CON_CLASSES[i] = 0 if char in VOWELS else 1
-     # Natural classes definitions
+
     DEGEN_CLASSES = np.zeros(vocab.size, dtype=np.int32)
-    # VOW_CON_CLASSES = np.zeros(vocab.size, dtype=np.int32)
     IDENTITY_CLASSES = np.array(range(vocab.size), dtype=np.int32)
 
-    # Set natural classes based on conditioning type
     natural_classes = [DEGEN_CLASSES, VOW_CON_CLASSES, IDENTITY_CLASSES][CONDITIONING_TYPE]
 
     if args.small_dataset is not None:
@@ -764,7 +734,6 @@ def main():
         with open(LOG_DIR + 'config.json', 'w') as f:
             json.dump(config, f)
 
-    # Create language model
     lm_data = all_la.copy()
     np.random.shuffle(lm_data)
     lm_data = lm_data[:int(len(lm_data) * LM_PERCENT)]
@@ -778,14 +747,12 @@ def main():
     else:
         raise Exception("Unsupported model type")
     
-    # Create leaf nodes for each language
     italian = LeafNode(it, M(), 'IT', config)
     spanish = LeafNode(es, M(), 'ES', config)
     portuguese = LeafNode(pt, M(), 'PT', config)
     french = LeafNode(fr, M(), 'FR', config)
     romanian = LeafNode(ro, M(), 'RO', config)
 
-    # Create tree structure
     if USE_FLAT_TREE:
         root = RootNode([spanish, italian, portuguese, french, romanian], lm, 'LA', config)
     else:
@@ -794,19 +761,16 @@ def main():
         italo = LanguageNode([western, italian], M(), 'ITALO', config)
         root = RootNode([italo, romanian], lm, 'LA', config)
 
-    # Run EM algorithm
     root = run_EM(root, EM_ROUNDS, LOG_OUTPUT, LOG_DIR, latin_words=la)
 
-    # Final sampling
     sample_tree(root, mh=False)
     if LOG_OUTPUT:
         print('Final recons ', evaluate(root.words, la))
         with open(LOG_DIR + 'final_recons.txt', 'w') as f:
             f.writelines([s+'\n' for s in root.words])
-    
-    # Save the predicted protoforms
+
     predicted_protoforms = root.words
-    with open('base_model/predicted_protoforms.txt', 'w', encoding='utf-8') as f:
+    with open(f'{BASE_FOLDER}/predicted_protoforms.txt', 'w', encoding='utf-8') as f:
         f.writelines([s+'\n' for s in predicted_protoforms])
     
     print("\nFirst 10 predicted protoforms:")
