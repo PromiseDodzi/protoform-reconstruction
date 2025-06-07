@@ -38,7 +38,7 @@ The repository is organized into three main directories:
 |---|---|
 | `base.py` | Reimplementation of **Bouchard et al. (2007)** baseline model |
 | `base_evaluation.py` | Baseline model performance evaluation |
-| `romance-ipa.txt` | Original Romance language dataset |
+| `romance-ipa.txt` | Original Romance language dataset from Meloni et al., (2021), located at: https://github.com/shauli-ravfogel/Latin-Reconstruction-NAACL/blob/main/romance-ipa.txt |
 | `romance_cleaned.txt` | Preprocessed baseline dataset |
 | `French_ipa.txt` | French language wordlist |
 | `Italian_ipa.txt` | Italian language wordlist |
