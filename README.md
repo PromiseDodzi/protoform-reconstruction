@@ -76,3 +76,12 @@ The repository is organized into three main directories:
    ```
    git checkout master
 
+## Execution Options
+
+### Automated Execution
+
+**Run all experiments automatically:**
+
+```
+make all
+
