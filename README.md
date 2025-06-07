@@ -117,7 +117,7 @@ To generate the rule transformation analysis (rule_transformed_forms.csv):
 
 use the `get_transformed` method in the `DenoisingModel` class located in `ranked_prob_evo/rule_transform_and_evolution.py`.
 
-#### Model Configuration
+### Model Configuration
 
 The model components can be individually configured by modifying the `analyze_row` method parameters in the `DenoisingModel` class within `rule_transform_and_evolution.py`.
 
