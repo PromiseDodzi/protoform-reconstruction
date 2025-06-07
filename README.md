@@ -1,94 +1,143 @@
-# protoform-reconstruction
+You're absolutely right! Here's the complete README in proper markdown format:
 
+```markdown
+# Protoform Reconstruction
 
-This repository accompanies the paper "Unsupervised Protoform Reconstruction through Parsimonious Rule-guided Heuristics and Evolutionary Search" by Promise Dodzi Kpoglu. The repository contains both the data and the source code used in the paper's experiments. The code, files, and illustrations are available on the `master` branch of this repository.
+This repository accompanies the paper **"Unsupervised Protoform Reconstruction through Parsimonious Rule-guided Heuristics and Evolutionary Search"** by Promise Dodzi Kpoglu. The repository contains the complete experimental framework, including datasets, source code, and evaluation scripts used to validate the proposed methodology.
 
----
-## Files
+## Repository Structure
 
-There are two main folder in the repository:
--`ranked_prob_evo`: this folder contains all scripts and results for the model presented in the paper
--`base_model`: this folder contains all scripts and results for the baseline model
+The repository is organized into three main directories:
 
----
-### Processed files
+- **`ranked_prob_evo/`**: Implementation and results for the proposed model
+- **`base_model/`**: Implementation and results for the baseline comparison model
+- **`adhoc_files/`**: Auxiliary scripts and visualization tools for analysis
 
-In each folder, after processing, results are obtained as files. Here are the details of each file in each folder:
-#### ranked_prob_evo
+## File Descriptions
 
-| File              | Info                                                                 |
-|-------------------|----------------------------------------------------------------------|
-| ID                | Unique identifier                                                   |
-| VARID             | Variant form identifier                                             |
-| DOCULECT          | Language name                                                       |
-| GLOSS             | Meaning of the form as used by language users                       |
-| FRENCH            | Gloss translation in French                                         |
-| ENGLISH_SHORT     | Reduced gloss in English                                            |
-| FRENCH_SHORT      | Reduced gloss in French                                             |
-| ENGLISH_CATEGORY  | Categorization of reduced gloss into designated categories          |
-| FRENCH_CATEGORY   | Categorization of reduced gloss in French into designated categories|
-| VALUE_ORG         | Original form noted by field-linguist                               |
-| SINGULAR          | Singular form of the word, where necessary                          |
-| PLURAL            | Plural form of the word, where necessary                            |
-| FORM              | 'Consensus' form chosen for verbs                                   |
-| PARSED_FORM       | Proposed segmentation of 'consensus' form                           |
-| RECONSTRUCTION    | Proposed reconstruction                                             |
-| CONCEPT           | Standardized reference of gloss                                     |
-| POS               | Part of speech of the word                                         |
+### Primary Model (`ranked_prob_evo/`)
 
-#### base_model
+| File | Description |
+|------|-------------|
+| `preprocessing.py` | Data preprocessing pipeline for input normalization |
+| `parsimony.py` | Implementation of the parsimony-based reconstruction component |
+| `rule_transform_and_evolution.py` | Rule transformation and evolutionary search algorithms |
+| `main.py` | Main execution script coordinating all model components |
+| `evaluator.py` | Performance evaluation and metrics computation |
+| `romance-ipa.txt` | Raw Romance language dataset in IPA notation |
+| `romance-cleaned.txt` | Preprocessed and normalized dataset |
+| `parsimony_reconstructions.tsv` | Top-k parsimonious reconstruction candidates |
+| `selected_proto_results.tsv` | Ranked reconstruction outputs |
+| `final_results.tsv` | Final protoform reconstruction proposals |
+| `evaluation_results_adopted.tsv` | Quantitative performance metrics |
 
-| File              | Info                                                                 |
-|-------------------|----------------------------------------------------------------------|
-| ID                | Unique identifier                                                   |
-| VARID             | Variant form identifier                                             |
-| DOCULECT          | Language name                                                       |
-| GLOSS             | Meaning of the form as used by language users                       |
-| FRENCH            | Gloss translation in French                                         |
-| ENGLISH_SHORT     | Reduced gloss in English                                            |
-| FRENCH_SHORT      | Reduced gloss in French                                             |
-| ENGLISH_CATEGORY  | Categorization of reduced gloss into designated categories          |
-| FRENCH_CATEGORY   | Categorization of reduced gloss in French into designated categories|
-| VALUE_ORG         | Original form noted by field-linguist                               |
-| SINGULAR          | Singular form of the word, where necessary                          |
-| PLURAL            | Plural form of the word, where necessary                            |
-| FORM              | 'Consensus' form chosen for verbs                                   |
-| PARSED_FORM       | Proposed segmentation of 'consensus' form                           |
-| RECONSTRUCTION    | Proposed reconstruction                                             |
-| CONCEPT           | Standardized reference of gloss                                     |
-| POS               | Part of speech of the word                                         |
+### Baseline Model (`base_model/`)
 
-## Scripts
+| File | Description |
+|------|-------------|
+| `base.py` | Reimplementation of **Bouchard et al. (2007)** baseline model |
+| `base_evaluation.py` | Baseline model performance evaluation |
+| `romance-ipa.txt` | Original Romance language dataset |
+| `romance_cleaned.txt` | Preprocessed baseline dataset |
+| `French_ipa.txt` | French language wordlist |
+| `Italian_ipa.txt` | Italian language wordlist |
+| `Spanish_ipa.txt` | Spanish language wordlist |
+| `Portuguese_ipa.txt` | Portuguese language wordlist |
+| `Romanian_ipa.txt` | Romanian language wordlist |
+| `Latin_correct_ipa.txt` | Ground truth Latin protoforms for evaluation |
+| `predicted_protoforms.txt` | Baseline model reconstruction outputs |
+| `merged_output.tsv` | Consolidated baseline results and data |
+| `evaluation_base_model.tsv` | Baseline model performance metrics |
 
-The `scripts` folder contains all the Python scripts needed to obtain the results reported in the paper.
+### Analysis Tools (`adhoc_files/`)
 
-- `utils.py`: Contains various classes defined to help clean and segment words.
-- `functions.py`: Calls on classes defined in `utils.py` and defines various functions to clean the original data.
-- `cleaning_data.py`: Calls various functions in `functions.py` to clean the original data and outputs `cleaned_data.tsv`.
-- `data_statistics.py`: Analyzes various components of the data and outputs results to the `illustrations` folder.
-- `cognates_alignments.py`: Automatically determines cognates in the data and performs alignment analysis. Outputs files into the `files` folder.
-- `clustering.py`: Accepts the results of `cognates_alignments.py` and performs clustering and analysis. Results are outputted into the `illustrations` folder.
+| File | Description |
+|------|-------------|
+| `get_illustration.py` | Performance visualization generator |
+| `flowchart.tex` | LaTeX source for model architecture diagram |
+| `flowchart.pdf` | Model architecture and component visualization |
+| `normalized_metrics.png` | Performance vs. rule complexity analysis |
+| `rule_performance.csv` | Rule-set performance evaluation data |
+| `extended_results.csv` | Comprehensive performance analysis |
+| `rule_transformed_forms.csv` | Rule transformation outputs and rankings |
+| `Makefile` | Build automation for documentation generation |
 
----
-## Commands
+## Experimental Reproduction
 
-To obtain the same results reported in the paper:
+### Prerequisites
 
-1. Clone this repository and run `pip install -r requirements.txt`.
-2. Switch to the `master` branch by running the command `git checkout master`.
+1. **Clone the repository:**
+   ```bash
+   git clone [repository-url]
+   cd protoform-reconstruction
+   ```
 
-There are two ways to obtain the results:
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- Run `make all` on the command line to automatically run all scripts.
-- Run the scripts manually:
-  - `python cleaning_data.py`: Runs the segmentation rules in `utils.py` on the manually processed data `data.tsv` by calling various functions in `functions.py`.
-  - `python data_statistics.py`: Produces an analysis of `cleaned_data.tsv`, outputting `coverage_plot.png`, a graph of every language's coverage, `mutual_coverage.png`, which gives an idea of length and breadth coverage in the data, and the number of items on the command line.
-  - `python cognates_alignments.py`: Outputs `lexstat.tsv` and `alignment_2.html`, which are cognate clustering results and alignment results, respectively.
-  - `python clustering.py`: Takes `lexstat.tsv` as input to output `tree.png`, a phylogenetic relationship based on cognacy, and `heatmap.png`, a heatmap of aggregated pairwise distances between languages.
+3. **Ensure you are on the master branch:**
+   ```bash
+   git checkout master
+   ```
 
----
+### Execution Options
+
+#### Automated Execution
+**Run all experiments automatically:**
+```bash
+make all
+```
+
+#### Manual Execution
+
+**Primary Model:**
+```bash
+cd ranked_prob_evo/
+python main.py          # Execute proposed model
+python evaluator.py     # Generate performance evaluation
+```
+
+**Baseline Model:**
+```bash
+cd base_model/
+python base.py          # Execute baseline model
+python base_evaluation.py  # Generate baseline evaluation
+```
+
+**Analysis and Visualization:**
+```bash
+cd adhoc_files/
+python get_illustration.py  # Generate performance plots
+make flowchart              # Generate architecture diagram
+```
+
+### Additional Outputs
+
+To generate the rule transformation analysis (`rule_transformed_forms.csv`), use the `get_transformed` method in the `DenoisingModel` class located in `ranked_prob_evo/rule_transform_and_evolution.py`.
+
+## Model Configuration
+
+The model components can be individually configured by modifying the `analyze_row` method parameters in the `DenoisingModel` class within `rule_transform_and_evolution.py`.
+
+## Citation
+
+If you use this code or data in your research, please cite:
+
+```bibtex
+[Citation information to be provided upon publication]
+```
+
 ## Acknowledgments
 
-This work is based on data from Heath et al.'s *"Dogon Comparative Wordlist"* (2016).  
+We acknowledge the contributions of all **BANG** project members and extend special thanks to **Andrei Munteanu** for his technical support.
 
-Special thanks to all BANG project members for their invaluable contributions to this project.  
+This research is supported by the **ERC-funded project BANG**: *"The Mysterious Bang: A Language and Population Isolate Unlocks the Secrets of Interior West Africa's Lost Ethnolinguistic Diversity"* (**CORDIS/Project ID: 101045195**).
+
+## License
+
+*[License information to be specified]*
+```
+
+Now everything is properly formatted in markdown with appropriate emphasis, code blocks, and formatting!
