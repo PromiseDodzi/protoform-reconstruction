@@ -25,7 +25,7 @@ The repository is organized into three main directories:
 | `rule_transform_and_evolution.py` | Rule transformation and evolutionary search algorithms |
 | `main.py` | Main execution script coordinating all model components |
 | `evaluator.py` | Performance evaluation and metrics computation |
-| `romance-ipa.txt` | Raw Romance language dataset in IPA notation |
+| `romance-ipa.txt` | Original Romance language dataset from Meloni et al., (2021), located at: https://github.com/shauli-ravfogel/Latin-Reconstruction-NAACL/blob/main/romance-ipa.txt |
 | `romance-cleaned.txt` | Preprocessed and normalized dataset |
 | `parsimony_reconstructions.tsv` | Top-k parsimonious reconstruction candidates |
 | `selected_proto_results.tsv` | Ranked reconstruction outputs |
