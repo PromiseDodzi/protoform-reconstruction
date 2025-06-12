@@ -128,9 +128,8 @@ The model components can be individually configured by modifying the `analyze_ro
 
 ---
 ## Acknowledgments
+The research is being funded by a grant from the European Research Council (ERC) under the European Union’s Horizon Europe Framework Programme (HORIZON) grant number 101045195.
 We acknowledge the contributions of all BANG project members and extend special thanks to Andrei Munteanu for his technical support.
-
-This research is supported by the ERC-funded project BANG: "The Mysterious Bang: A Language and Population Isolate Unlocks the Secrets of Interior West Africa's Lost Ethnolinguistic Diversity" (CORDIS/Project ID: 101045195).
 
 
 
