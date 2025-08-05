@@ -20,6 +20,8 @@ The repository is organized into three main directories:
 
 ## File Descriptions
 
+*NB: all code is in the master branch*
+
 ### Primary Model (`ranked_prob_evo/`)
 
 | File | Description |
