@@ -1,12 +1,14 @@
 # Protoform Reconstruction
 
 This repository accompanies the paper **"Unsupervised Protoform Reconstruction through Parsimonious Rule-guided Heuristics and Evolutionary Search"** by Promise Dodzi Kpoglu. The repository contains the complete  framework, including datasets, source code, and evaluation scripts used to validate the proposed methodology.
+*NB: all code is in the master branch*
 
 ---
 
 ## Repository Structure
 
 The repository is organized into three main directories:
+*NB: all code is in the master branch*
 
 - **`ranked_prob_evo/`**: Implementation and results for the proposed model
 - **`base_model/`**: Implementation and results for the baseline comparison model
