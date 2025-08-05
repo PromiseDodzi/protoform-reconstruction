@@ -218,7 +218,7 @@ class DenoisingModel:
         """Generate plausible variants of a protoform"""
         variants = set()
 
-        # 1. Vowel alternations
+        # Vowel alternations
         for i, c in enumerate(protoform):
             if c in self.vowels:
                 for v in self.vowels:
@@ -226,7 +226,7 @@ class DenoisingModel:
                         variant = protoform[:i] + v + protoform[i+1:]
                         variants.add(variant)
 
-        # 2. Common suffix alternations
+        #Common suffix alternations
         for ending in self.common_endings:
             if protoform.endswith(ending):
                 for alt_ending in self.common_endings:
@@ -234,20 +234,19 @@ class DenoisingModel:
                         variant = protoform[:-len(ending)] + alt_ending
                         variants.add(variant)
 
-        # 3. Consonant cluster simplifications
+        #Consonant cluster simplifications
         for cluster in self.valid_consonant_clusters:
             if cluster in protoform:
                 pos = protoform.find(cluster)
                 variant = protoform[:pos] + cluster[-1] + protoform[pos+len(cluster):]
                 variants.add(variant)
 
-        # 4. Length variations (±1 character)
+        #Length variations (±1 character)
         if len(protoform) > 3:
             for i in range(len(protoform)):
                 variant = protoform[:i] + protoform[i+1:]
                 variants.add(variant)
 
-            # Try duplicating a character
             for i in range(len(protoform)):
                 variant = protoform[:i] + protoform[i] + protoform[i:]
                 variants.add(variant)
@@ -259,9 +258,8 @@ class DenoisingModel:
         if not protoform:
             return float('-inf')
 
-
         likelihood = self.likelihood(protoform, observed_forms)
-
+        
         prior = self.prior(protoform)
 
         return likelihood + prior
@@ -271,7 +269,7 @@ class DenoisingModel:
         if not observed_forms:
             return None
 
-        # Stage 1: Generate candidates per language with phylogenetic weighting
+        # Generate candidates per language with phylogenetic weighting
         lang_candidates = {}
         for lang, word in observed_forms.items():
             if word and word != '-':
@@ -283,7 +281,7 @@ class DenoisingModel:
         if not lang_candidates:
             return None
 
-        # Stage 2: Find inter-language consensus with weighted comparison
+        #Find inter-language consensus with weighted comparison
         common_candidates = set()
         lang_pairs = list(itertools.combinations(lang_candidates.items(), 2))
 
@@ -294,7 +292,7 @@ class DenoisingModel:
                         best = cand1 if w1 >= w2 else cand2
                         common_candidates.add(best)
 
-        # Stage 3: Score candidates
+        #Score candidates
         scored = []
         for candidate in (common_candidates or
                             set().union(*[cands for cands, _ in lang_candidates.values()])):
@@ -485,7 +483,6 @@ class DenoisingModel:
             else:
                 return []
 
-     
         candidates = {consensus}
         for _ in range(2): 
             new_candidates = set()
@@ -513,7 +510,7 @@ class DenoisingModel:
           if not valid_forms:
               return None
 
-          # 1. Initialize the pool of candidates
+          #Initialize the pool of candidates
           current_candidates = set()
 
           # Add Seed top candidates from phase I, constructed top rule-transformations to be added to pool
@@ -549,7 +546,7 @@ class DenoisingModel:
               candidates = self.reconstruct_cognate_set(observed_forms, num_candidates=2)
               return candidates[0] if candidates else None
 
-          # 2. Darwinian Selection Loop
+          #Darwinian Selection Loop
           num_eliminated_per_round = max(1, len(current_candidates) // 5) # Eliminate low scoring candidates
           max_selection_rounds = 20 
 
