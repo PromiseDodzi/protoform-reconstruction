@@ -2,8 +2,6 @@
 
 This repository accompanies the paper **"Unsupervised Protoform Reconstruction through Parsimonious Rule-guided Heuristics and Evolutionary Search"** by Promise Dodzi Kpoglu. The repository contains the complete  framework, including datasets, source code, and evaluation scripts used to validate the proposed methodology.
 
-*NB: all code is in the master branch*
-
 ---
 
 ## Repository Structure
@@ -80,10 +78,6 @@ The repository is organized into three main directories:
 3.  **Install dependencies:**
    
     ` pip install -r requirements.txt` 
-
-5.  **Ensure you are on the master branch:**
-   
-    `git checkout master` 
 
 ### Execution Options
 
